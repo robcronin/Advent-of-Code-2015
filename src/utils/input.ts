@@ -1,19 +1,7 @@
-export interface PasswordConfig {
-  start: number;
-  end: number;
-  letter: string;
-  password: string;
-}
-
-export interface Passport {
-  byr?: string;
-  iyr?: string;
-  eyr?: string;
-  hgt?: string;
-  hcl?: string;
-  ecl?: string;
-  pid?: string;
-  cid?: string;
+export interface PresentMeasurement {
+  h: number;
+  w: number;
+  l: number;
 }
 
 const getDelimiter = (input: string) => {
@@ -41,4 +29,14 @@ const parseLines = (input: string, delimiter?: string) => {
 export const parseInput = (input: string) => {
   const parsed = parseLines(input);
   return mapToNumberIfNecessary(parsed);
+};
+
+export const parsePresentMeasurements = (
+  input: string,
+): PresentMeasurement[] => {
+  const parsed = parseLines(input);
+  return parsed.map((presentMeasurement) => {
+    const [h, w, l] = presentMeasurement.split('x');
+    return { h: +h, w: +w, l: +l };
+  });
 };

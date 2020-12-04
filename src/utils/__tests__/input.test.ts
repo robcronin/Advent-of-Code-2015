@@ -1,4 +1,4 @@
-import { parseInput } from '../input';
+import { parseInput, parsePresentMeasurements } from '../input';
 
 test('Parses a newline delimited array of numbers', () => {
   const input = `142195
@@ -27,4 +27,13 @@ test('Parses a comma delimited array of strings', () => {
 test('Returns an array if no delimiter present', () => {
   const input = '22222';
   expect(parseInput(input)).toStrictEqual([2, 2, 2, 2, 2]);
+});
+
+test('Returns a present measurement', () => {
+  const input = `2x3x4
+  1x1x10`;
+  expect(parsePresentMeasurements(input)).toStrictEqual([
+    { h: 2, w: 3, l: 4 },
+    { h: 1, w: 1, l: 10 },
+  ]);
 });
