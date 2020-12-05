@@ -1,6 +1,7 @@
 {
   "scripts": {
     "test": "jest --watch",
+    "coverage": "jest --coverage",
     "test:all": "jest",
     "compile": "tsc",
     "day": "scripts/newDay.sh"
@@ -23,5 +24,15 @@
     "@types/jest": "^26.0.15",
     "babel-jest": "^26.6.3",
     "prettier": "2.2.1"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      }
+    }
   }
 }
