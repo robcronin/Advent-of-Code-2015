@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target": "es2019",
     "strict": true,
-    "lib": ["dom", "es2019"]
+    "lib": ["dom", "es2019"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
