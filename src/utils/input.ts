@@ -13,6 +13,14 @@ export interface LightInstruction {
   y2: number;
 }
 
+export interface SignalInstruction {
+  gate?: 'AND' | 'OR' | 'NOT' | 'LSHIFT' | 'RSHIFT';
+  input1?: string;
+  input2?: string;
+  signal?: number;
+  destination: string;
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -69,5 +77,61 @@ export const parseLightInstructions = (input: string): LightInstruction[] => {
       x2: +x2,
       y2: +y2,
     };
+  });
+};
+
+export const parseSignalInstructions = (input: string): SignalInstruction[] => {
+  const parsed = parseLines(input);
+  return parsed.map((lightInstruction) => {
+    const groups = lightInstruction.match(
+      new RegExp(
+        '^(([0-9]+)|(NOT ([a-z]+))|(([a-z]+) (AND|OR) ([a-z]+))|(([a-z]+) (LSHIFT|RSHIFT) ([0-9]+))) -> ([a-z]+)$',
+      ),
+    );
+    if (!groups)
+      throw new Error(`${lightInstruction} is not a valid signal instruction`);
+    const [
+      _,
+      _source,
+      simpleSignal,
+      isNot,
+      notInput,
+      isAndOrOr,
+      andOrInput1,
+      andOrOr,
+      andOrInput2,
+      isShift,
+      shiftInput,
+      leftOrRightShift,
+      shiftSignal,
+      destination,
+    ] = groups;
+
+    if (simpleSignal) {
+      return {
+        signal: +simpleSignal,
+        destination,
+      };
+    } else if (isAndOrOr) {
+      return {
+        input1: andOrInput1,
+        input2: andOrInput2,
+        gate: andOrOr as 'AND' | 'OR',
+        destination,
+      };
+    } else if (isShift) {
+      return {
+        signal: +shiftSignal,
+        input1: shiftInput,
+        gate: leftOrRightShift as 'LSHIFT' | 'RSHIFT',
+        destination,
+      };
+    } else {
+      return {
+        gate: 'NOT',
+        input1: notInput,
+        destination,
+      };
+    }
   });
 };
