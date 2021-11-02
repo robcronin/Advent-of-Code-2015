@@ -93,6 +93,9 @@ export const parseLightInstructions = (input: string): LightInstruction[] => {
   });
 };
 
+const transformSignal = (signal: string): string | number =>
+  isNaN(+signal) ? signal : +signal;
+
 export const parseSignalInstructions = (input: string): SignalInstruction[] => {
   const parsed = parseLines(input);
   return parsed.map((signalInstruction) => {
@@ -122,27 +125,27 @@ export const parseSignalInstructions = (input: string): SignalInstruction[] => {
 
     if (simpleSignal) {
       return {
-        signal: isNaN(+simpleSignal) ? simpleSignal : +simpleSignal,
+        signal: transformSignal(simpleSignal),
         destination,
       };
     } else if (isAndOrOr) {
       return {
-        input1: isNaN(+andOrInput1) ? andOrInput1 : +andOrInput1,
-        input2: isNaN(+andOrInput2) ? andOrInput2 : +andOrInput2,
+        input1: transformSignal(andOrInput1),
+        input2: transformSignal(andOrInput2),
         gate: andOrOr as 'AND' | 'OR',
         destination,
       };
     } else if (isShift) {
       return {
-        signal: isNaN(+shiftSignal) ? shiftSignal : +shiftSignal,
-        input1: isNaN(+shiftInput) ? shiftInput : +shiftInput,
+        signal: transformSignal(shiftSignal),
+        input1: transformSignal(shiftInput),
         gate: leftOrRightShift as 'LSHIFT' | 'RSHIFT',
         destination,
       };
     } else {
       return {
         gate: 'NOT',
-        input1: isNaN(+notInput) ? notInput : +notInput,
+        input1: transformSignal(notInput),
         destination,
       };
     }
