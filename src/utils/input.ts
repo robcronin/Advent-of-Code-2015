@@ -13,13 +13,26 @@ export interface LightInstruction {
   y2: number;
 }
 
-export interface SignalInstruction {
-  gate?: 'AND' | 'OR' | 'NOT' | 'LSHIFT' | 'RSHIFT';
-  input1?: string;
-  input2?: string;
-  signal?: number;
-  destination: string;
-}
+export type SignalInstruction = { destination: string } & (
+  | {
+      gate: undefined;
+      signal: number | string;
+    }
+  | {
+      gate: 'AND' | 'OR';
+      input1: number | string;
+      input2: number | string;
+    }
+  | {
+      gate: 'LSHIFT' | 'RSHIFT';
+      input1: number | string;
+      signal: number | string;
+    }
+  | {
+      gate: 'NOT';
+      input1: number | string;
+    }
+);
 
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
@@ -82,14 +95,14 @@ export const parseLightInstructions = (input: string): LightInstruction[] => {
 
 export const parseSignalInstructions = (input: string): SignalInstruction[] => {
   const parsed = parseLines(input);
-  return parsed.map((lightInstruction) => {
-    const groups = lightInstruction.match(
+  return parsed.map((signalInstruction) => {
+    const groups = signalInstruction.match(
       new RegExp(
-        '^(([0-9]+)|(NOT ([a-z]+))|(([a-z]+) (AND|OR) ([a-z]+))|(([a-z]+) (LSHIFT|RSHIFT) ([0-9]+))) -> ([a-z]+)$',
+        '^(([0-9a-z]+)|(NOT ([0-9a-z]+))|(([0-9a-z]+) (AND|OR) ([0-9a-z]+))|(([0-9a-z]+) (LSHIFT|RSHIFT) ([0-9a-z]+))) -> ([a-z]+)$',
       ),
     );
     if (!groups)
-      throw new Error(`${lightInstruction} is not a valid signal instruction`);
+      throw new Error(`${signalInstruction} is not a valid signal instruction`);
     const [
       _,
       _source,
@@ -109,27 +122,27 @@ export const parseSignalInstructions = (input: string): SignalInstruction[] => {
 
     if (simpleSignal) {
       return {
-        signal: +simpleSignal,
+        signal: isNaN(+simpleSignal) ? simpleSignal : +simpleSignal,
         destination,
       };
     } else if (isAndOrOr) {
       return {
-        input1: andOrInput1,
-        input2: andOrInput2,
+        input1: isNaN(+andOrInput1) ? andOrInput1 : +andOrInput1,
+        input2: isNaN(+andOrInput2) ? andOrInput2 : +andOrInput2,
         gate: andOrOr as 'AND' | 'OR',
         destination,
       };
     } else if (isShift) {
       return {
-        signal: +shiftSignal,
-        input1: shiftInput,
+        signal: isNaN(+shiftSignal) ? shiftSignal : +shiftSignal,
+        input1: isNaN(+shiftInput) ? shiftInput : +shiftInput,
         gate: leftOrRightShift as 'LSHIFT' | 'RSHIFT',
         destination,
       };
     } else {
       return {
         gate: 'NOT',
-        input1: notInput,
+        input1: isNaN(+notInput) ? notInput : +notInput,
         destination,
       };
     }
