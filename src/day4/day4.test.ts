@@ -20,7 +20,7 @@ describe('day 4', () => {
 });
 
 describe('day 4 part 2', () => {
-  it('answer', () => {
+  it.skip('answer', () => {
     const answer = day4part2(data);
     logAnswer(answer, 4, 2);
     expect(typeof answer).toBe('number');

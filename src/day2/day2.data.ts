@@ -1,4 +1,4 @@
-import { parsePresentMeasurements, PresentMeasurement } from '../utils/input';
+import { parsePresentMeasurements } from './day2';
 
 const input = `29x13x26
 11x11x14

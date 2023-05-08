@@ -1,4 +1,4 @@
-import { PresentMeasurement } from './input';
+import { PresentMeasurement } from '../utils/input';
 
 export const measurePaper = (presentMeasurement: PresentMeasurement) => {
   const measurements = Object.values(presentMeasurement).sort((a, b) => a - b);

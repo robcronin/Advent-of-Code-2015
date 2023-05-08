@@ -1,4 +1,4 @@
-import { getLowestByNumberLeadingZeros } from '../utils/crypto';
+import { getLowestByNumberLeadingZeros } from './crypto';
 
 export const day4 = (input: string) => getLowestByNumberLeadingZeros(input, 5);
 

@@ -6,7 +6,7 @@ import {
   hasRepeatingPattern,
   isNiceString,
   isOldNiceString,
-} from '../string';
+} from './string';
 
 describe('hasNumVowels', () => {
   it('should return true if 3 vowels', () => {

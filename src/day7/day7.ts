@@ -1,4 +1,84 @@
-import { SignalInstruction } from '../utils/input';
+import { parseLines } from '../utils/input';
+
+export type SignalInstruction = { destination: string } & (
+  | {
+      gate: undefined;
+      signal: number | string;
+    }
+  | {
+      gate: 'AND' | 'OR';
+      input1: number | string;
+      input2: number | string;
+    }
+  | {
+      gate: 'LSHIFT' | 'RSHIFT';
+      input1: number | string;
+      signal: number | string;
+    }
+  | {
+      gate: 'NOT';
+      input1: number | string;
+    }
+);
+
+const transformSignal = (signal: string): string | number =>
+  isNaN(+signal) ? signal : +signal;
+
+export const parseSignalInstructions = (input: string): SignalInstruction[] => {
+  const parsed = parseLines(input);
+  return parsed.map((signalInstruction) => {
+    const groups = signalInstruction.match(
+      new RegExp(
+        '^(([0-9a-z]+)|(NOT ([0-9a-z]+))|(([0-9a-z]+) (AND|OR) ([0-9a-z]+))|(([0-9a-z]+) (LSHIFT|RSHIFT) ([0-9a-z]+))) -> ([a-z]+)$',
+      ),
+    );
+    if (!groups)
+      throw new Error(`${signalInstruction} is not a valid signal instruction`);
+    const [
+      _,
+      _source,
+      simpleSignal,
+      isNot,
+      notInput,
+      isAndOrOr,
+      andOrInput1,
+      andOrOr,
+      andOrInput2,
+      isShift,
+      shiftInput,
+      leftOrRightShift,
+      shiftSignal,
+      destination,
+    ] = groups;
+
+    if (simpleSignal) {
+      return {
+        signal: transformSignal(simpleSignal),
+        destination,
+      };
+    } else if (isAndOrOr) {
+      return {
+        input1: transformSignal(andOrInput1),
+        input2: transformSignal(andOrInput2),
+        gate: andOrOr as 'AND' | 'OR',
+        destination,
+      };
+    } else if (isShift) {
+      return {
+        signal: transformSignal(shiftSignal),
+        input1: transformSignal(shiftInput),
+        gate: leftOrRightShift as 'LSHIFT' | 'RSHIFT',
+        destination,
+      };
+    } else {
+      return {
+        gate: 'NOT',
+        input1: transformSignal(notInput),
+        destination,
+      };
+    }
+  });
+};
 
 const runAnd = (input1: number, input2: number): number => input1 & input2;
 const runOr = (input1: number, input2: number): number => input1 | input2;

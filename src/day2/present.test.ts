@@ -1,4 +1,4 @@
-import { measurePaper, measureRibbon } from '../present';
+import { measurePaper, measureRibbon } from './present';
 
 const twoThreeFour = { h: 2, w: 3, l: 4 };
 const oneOneTen = { h: 1, w: 1, l: 10 };

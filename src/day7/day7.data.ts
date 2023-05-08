@@ -1,4 +1,4 @@
-import { parseSignalInstructions } from '../utils/input';
+import { parseSignalInstructions } from './day7';
 
 const input = `lf AND lq -> ls
 iu RSHIFT 1 -> jn
