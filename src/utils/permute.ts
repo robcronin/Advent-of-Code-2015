@@ -1,6 +1,6 @@
 import { range } from './looping';
 
-export const getPermuatations = <T>(inputArr: Array<T>): Array<Array<T>> => {
+export const getPermutations = <T>(inputArr: Array<T>): Array<Array<T>> => {
   const result: Array<Array<T>> = [];
 
   const permute = (arr: Array<T>, m: Array<T> = []) => {

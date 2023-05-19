@@ -1,5 +1,5 @@
 import { maxArr, sumArr } from '../utils/array';
-import { getPermuatations } from '../utils/permute';
+import { getPermutations } from '../utils/permute';
 
 type HappinessScores = Record<string, Record<string, number>>;
 
@@ -46,7 +46,7 @@ const getPermuationHappiness = (
 
 const getMaxHappiness = (happinessScores: HappinessScores) => {
   const people = Object.keys(happinessScores);
-  const permutations = getPermuatations(people);
+  const permutations = getPermutations(people);
   return maxArr(permutations, (perm) =>
     getPermuationHappiness(perm, happinessScores),
   );
